@@ -34,9 +34,7 @@
             }
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -47,10 +45,7 @@
             line-height: 1.6;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        .container { max-width: 600px; margin: 0 auto; }
 
         h1 {
             text-align: center;
@@ -93,55 +88,24 @@
             height: 100px;
         }
 
-        .btn:focus-visible {
-            outline: 2px solid var(--color-primary);
-            outline-offset: 2px;
-        }
+        .btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-primary {
-            background: var(--color-primary);
-            color: white;
-        }
-
+        .btn-primary { background: var(--color-primary); color: white; }
         .btn-primary:hover:not(:disabled) {
             background: var(--color-primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(32, 128, 145, 0.3);
         }
 
-        .btn-success {
-            background: var(--color-success);
-            color: white;
-        }
+        .btn-success { background: var(--color-success); color: white; }
+        .btn-success:hover:not(:disabled) { background: #23a142; transform: translateY(-2px); }
 
-        .btn-success:hover:not(:disabled) {
-            background: #23a142;
-            transform: translateY(-2px);
-        }
+        .btn-secondary { background: #e0e0e0; color: var(--color-text); }
+        .btn-secondary:hover:not(:disabled) { background: #d0d0d0; }
 
-        .btn-secondary {
-            background: #e0e0e0;
-            color: var(--color-text);
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background: #d0d0d0;
-        }
-
-        .btn-text {
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        .btn-icon {
-            font-size: 32px;
-        }
+        .btn-text { font-size: 12px; text-align: center; line-height: 1.2; }
+        .btn-icon { font-size: 32px; }
 
         .status {
             text-align: center;
@@ -152,31 +116,12 @@
             display: none;
         }
 
-        .status.active {
-            display: block;
-        }
+        .status.active { display: block; }
+        .status.recording { background: rgba(255, 84, 89, 0.15); color: var(--color-error); }
+        .status.processing { background: rgba(32, 128, 145, 0.15); color: var(--color-primary); }
+        .status.success { background: rgba(43, 184, 78, 0.15); color: var(--color-success); }
 
-        .status.recording {
-            background: rgba(255, 84, 89, 0.15);
-            color: var(--color-error);
-        }
-
-        .status.processing {
-            background: rgba(32, 128, 145, 0.15);
-            color: var(--color-primary);
-        }
-
-        .status.success {
-            background: rgba(43, 184, 78, 0.15);
-            color: var(--color-success);
-        }
-
-        .label {
-            display: block;
-            margin-bottom: var(--space-8);
-            font-weight: 600;
-            color: var(--color-text);
-        }
+        .label { display: block; margin-bottom: var(--space-8); font-weight: 600; color: var(--color-text); }
 
         .transcript-box {
             background: white;
@@ -193,16 +138,10 @@
         }
 
         @media (prefers-color-scheme: dark) {
-            .transcript-box {
-                background: #1a1a1a;
-                border-color: var(--color-border);
-            }
+            .transcript-box { background: #1a1a1a; border-color: var(--color-border); }
         }
 
-        .transcript-empty {
-            color: var(--color-text-secondary);
-            font-style: italic;
-        }
+        .transcript-empty { color: var(--color-text-secondary); font-style: italic; }
 
         .summary-box {
             background: var(--color-bg-1);
@@ -213,9 +152,7 @@
             display: none;
         }
 
-        .summary-box.active {
-            display: block;
-        }
+        .summary-box.active { display: block; }
 
         .summary-title {
             font-weight: 700;
@@ -241,14 +178,8 @@
             margin-bottom: var(--space-16);
         }
 
-        .permission-request.active {
-            display: block;
-        }
-
-        .permission-request p {
-            margin: 0 0 var(--space-12) 0;
-            color: var(--color-text);
-        }
+        .permission-request.active { display: block; }
+        .permission-request p { margin: 0 0 var(--space-12) 0; color: var(--color-text); }
 
         .btn-request-permission {
             background: var(--color-error);
@@ -259,9 +190,7 @@
             flex-direction: row;
         }
 
-        .btn-request-permission:hover:not(:disabled) {
-            background: #e63d42;
-        }
+        .btn-request-permission:hover:not(:disabled) { background: #e63d42; }
 
         .recording-indicator {
             display: inline-block;
@@ -272,10 +201,7 @@
             animation: pulse 1s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .info-text {
             font-size: 12px;
@@ -285,27 +211,11 @@
         }
 
         @media (max-width: 480px) {
-            body {
-                padding: var(--space-12);
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .btn {
-                width: 90px;
-                height: 90px;
-                font-size: 11px;
-            }
-
-            .btn-icon {
-                font-size: 28px;
-            }
-
-            .controls {
-                gap: var(--space-12);
-            }
+            body { padding: var(--space-12); }
+            h1 { font-size: 24px; }
+            .btn { width: 90px; height: 90px; font-size: 11px; }
+            .btn-icon { font-size: 28px; }
+            .controls { gap: var(--space-12); }
         }
     </style>
 </head>
@@ -337,14 +247,12 @@
                     <div class="btn-icon">📋</div>
                     <div class="btn-text">Итоги встречи</div>
                 </button>
-                <button class="btn btn-secondary" id="resetBtn" onclick="resetRecording()">
+                <button class="btn btn-secondary" id="resetBtn" onclick="resetRecording()" disabled>
                     <div class="btn-icon">🔄</div>
                     <div class="btn-text">Новый диалог</div>
                 </button>
             </div>
-            <div class="info-text">
-                Браузер автоматически распознает вашу речь
-            </div>
+            <div class="info-text">Браузер автоматически распознает вашу речь</div>
         </div>
 
         <div class="card">
@@ -368,16 +276,15 @@
     <script>
         let recognition = null;
         let isRecording = false;
-        let transcript = '';
         let hasPermission = false;
+        let permissionDenied = false;
+
+        let finalChunks = [];
         let interimTranscript = '';
         let shouldContinueRecording = false;
-        let permissionDenied = false;
-        let lastTranscriptLength = 0;
 
         function initSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            
             if (!SpeechRecognition) {
                 showStatus('Ваш браузер не поддерживает Web Speech API', 'error');
                 document.getElementById('startBtn').disabled = true;
@@ -388,7 +295,6 @@
             recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = 'ru-RU';
-            recognition.language = 'ru-RU';
             recognition.maxAlternatives = 1;
 
             recognition.onstart = () => {
@@ -397,6 +303,7 @@
                 document.getElementById('startBtn').disabled = true;
                 document.getElementById('stopBtn').disabled = false;
                 document.getElementById('summaryBtn').disabled = true;
+                document.getElementById('resetBtn').disabled = true;
                 showStatus('<span class="recording-indicator"></span> Запись в процессе...', 'recording');
             };
 
@@ -404,18 +311,16 @@
                 interimTranscript = '';
 
                 for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcriptSegment = event.results[i][0].transcript;
+                    const res = event.results[i];
+                    const text = res[0].transcript.trim();
+                    if (!text) continue;
 
-                    if (event.results[i].isFinal && transcriptSegment.trim() !== '') {
-                        // ✅ ИСПРАВЛЕНИЕ #2: Проверяем, что это действительно новый текст
-                        const trimmedSegment = transcriptSegment.trim() + ' ';
-                        // Не добавляем, если текст уже есть в конце (дубликат)
-                        if (!transcript.endsWith(trimmedSegment)) {
-                            transcript += trimmedSegment;
-                            lastTranscriptLength = transcript.length;
+                    if (res.isFinal) {
+                        if (!finalChunks.includes(text)) {
+                            finalChunks.push(text);
                         }
                     } else {
-                        interimTranscript += transcriptSegment;
+                        interimTranscript += text + ' ';
                     }
                 }
 
@@ -427,7 +332,7 @@
                     showStatus('Не обнаружена речь. Проверьте микрофон.', 'error');
                 } else if (event.error === 'network') {
                     showStatus('Ошибка сети. Проверьте интернет-соединение.', 'error');
-                } else {
+                } else if (event.error !== 'aborted') {
                     showStatus(`Ошибка: ${event.error}`, 'error');
                 }
             };
@@ -436,25 +341,20 @@
                 isRecording = false;
                 interimTranscript = '';
 
-                // Если пользователь НЕ нажимал "Остановить", автоматически перезапускаем
                 if (shouldContinueRecording) {
-                    console.log('Auto-restarting after silence... Current length:', lastTranscriptLength);
                     try {
                         recognition.lang = 'ru-RU';
-                        recognition.language = 'ru-RU';
-                        recognition.maxAlternatives = 1;
                         recognition.start();
                     } catch (e) {
                         console.log('Restart failed:', e);
                     }
                 } else {
-                    // Пользователь нажал "Остановить"
                     document.getElementById('startBtn').disabled = false;
                     document.getElementById('stopBtn').disabled = true;
                     document.getElementById('resetBtn').disabled = false;
-                    document.getElementById('summaryBtn').disabled = transcript.trim() === '';
-                    
-                    if (transcript.trim() !== '') {
+                    document.getElementById('summaryBtn').disabled = finalChunks.length === 0;
+
+                    if (finalChunks.length > 0) {
                         showStatus('✓ Запись завершена. Нажмите "Итоги встречи" для анализа.', 'success');
                     }
                 }
@@ -462,36 +362,31 @@
         }
 
         function requestMicrophonePermission() {
-            // ✅ ИСПРАВЛЕНИЕ #1: НЕ запрашиваем если уже есть доступ или юзер отказал
             if (hasPermission) {
                 document.getElementById('permissionRequest').classList.remove('active');
-                if (!recognition) {
-                    initSpeechRecognition();
-                }
+                if (!recognition) initSpeechRecognition();
                 return;
             }
 
             if (permissionDenied) {
-                showStatus('✗ Доступ ранее отклонён. Зайдите: Chrome → Настройки → Приложения → Разрешения → Микрофон → Разрешить', 'error');
+                showStatus('Доступ ранее отклонён. Разрешите микрофон в настройках браузера.', 'error');
                 document.getElementById('permissionRequest').classList.add('active');
                 return;
             }
 
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
-                    stream.getTracks().forEach(track => track.stop());
+                    stream.getTracks().forEach(t => t.stop());
                     hasPermission = true;
                     permissionDenied = false;
                     document.getElementById('permissionRequest').classList.remove('active');
-                    if (!recognition) {
-                        initSpeechRecognition();
-                    }
+                    if (!recognition) initSpeechRecognition();
                     document.getElementById('startBtn').disabled = false;
                     showStatus('✓ Доступ к микрофону получен.', 'success');
                 })
-                .catch(error => {
+                .catch(() => {
                     permissionDenied = true;
-                    showStatus('✗ Доступ отклонён. Зайдите в настройки Chrome и разрешите микрофон для этого сайта.', 'error');
+                    showStatus('Доступ к микрофону отклонён. Разрешите его в настройках браузера.', 'error');
                     document.getElementById('permissionRequest').classList.add('active');
                 });
         }
@@ -501,63 +396,51 @@
                 requestMicrophonePermission();
                 return;
             }
+            if (!recognition) initSpeechRecognition();
 
-            if (!recognition) {
-                initSpeechRecognition();
-            }
-
-            transcript = '';
+            finalChunks = [];
             interimTranscript = '';
-            lastTranscriptLength = 0;
             shouldContinueRecording = true;
             updateTranscriptDisplay();
             document.getElementById('summaryBox').classList.remove('active');
-            
+
             try {
-                // Явно устанавливаем русский язык ПЕРЕД стартом
                 recognition.lang = 'ru-RU';
-                recognition.language = 'ru-RU';
-                recognition.maxAlternatives = 1;
                 recognition.start();
             } catch (e) {
-                console.log('Already recording or start error:', e);
+                console.log('Start error:', e);
             }
         }
 
         function stopRecording() {
-            if (recognition) {
-                shouldContinueRecording = false;
-                isRecording = false;
-                try {
-                    recognition.abort(); // abort() прерывает сразу, не finish current
-                } catch (e) {
-                    console.log('Abort error:', e);
-                }
-                // Обновляем UI
-                document.getElementById('startBtn').disabled = false;
-                document.getElementById('stopBtn').disabled = true;
-                document.getElementById('resetBtn').disabled = false;
-                document.getElementById('summaryBtn').disabled = transcript.trim() === '';
-                
-                if (transcript.trim() !== '') {
-                    showStatus('✓ Запись остановлена.', 'success');
-                }
+            if (!recognition) return;
+            shouldContinueRecording = false;
+            try {
+                recognition.abort();
+            } catch (e) {
+                console.log('Stop error:', e);
             }
         }
 
+        function getFullTranscript() {
+            const base = finalChunks.join(' ');
+            return base + (interimTranscript ? ' ' + interimTranscript : '');
+        }
+
         function updateTranscriptDisplay() {
-            const displayText = transcript + interimTranscript;
-            const transcriptBox = document.getElementById('transcript');
-            
-            if (displayText.trim() === '') {
-                transcriptBox.innerHTML = '<div class="transcript-empty">Нажмите "Начать запись" для начала распознавания речи</div>';
+            const text = getFullTranscript().trim();
+            const box = document.getElementById('transcript');
+
+            if (!text) {
+                box.innerHTML = '<div class="transcript-empty">Нажмите "Начать запись" для начала распознавания речи</div>';
             } else {
-                transcriptBox.textContent = displayText;
+                box.textContent = text;
             }
         }
 
         function generateSummary() {
-            if (transcript.trim() === '') {
+            const text = finalChunks.join(' ').trim();
+            if (!text) {
                 showStatus('Нет текста для анализа', 'error');
                 return;
             }
@@ -566,17 +449,17 @@
             document.getElementById('summaryBtn').disabled = true;
 
             setTimeout(() => {
-                const summary = extractSummary(transcript);
+                const summary = extractSummary(text);
                 document.getElementById('summaryText').textContent = summary;
                 document.getElementById('summaryBox').classList.add('active');
                 showStatus('✓ Резюме готово', 'success');
                 document.getElementById('summaryBtn').disabled = false;
-            }, 1000);
+            }, 500);
         }
 
         function extractSummary(text) {
-            let phrases = text
-                .split(/[.,!?;:—–-]\s+/)
+            const phrases = text
+                .split(/[.!?;:—–-]\s+/)
                 .map(p => p.trim())
                 .filter(p => p.length > 5);
 
@@ -584,122 +467,89 @@
             if (phrases.length === 1) return phrases[0];
 
             const importanceWords = [
-                'решил', 'обсуди', 'согласи', 'договори', 'договор',
-                'план', 'задач', 'нужн', 'необходим',
-                'важн', 'срок', 'дедлайн', 'ответствен',
-                'заключ', 'итог', 'вывод', 'результат',
-                'главн', 'основн', 'предложи',
-                'одобри', 'утверди',
-                'ключ', 'критич', 'срочн',
-                'обязатель', 'внимани', 'следующ',
-                'выполн', 'отвечает', 'ответить', 'новое', 'изменени'
+                'решил','обсуди','согласи','договор','план','задач','нужн','необходим',
+                'важн','срок','дедлайн','ответствен','итог','вывод','результат',
+                'главн','основн','предложи','одобри','утверди','ключ','срочн',
+                'обязатель','внимани','следующ','выполн','изменени'
             ];
 
-            const phraseScores = phrases.map((phrase, idx) => {
+            const scored = phrases.map((phrase, idx) => {
                 let score = 0;
-                const lowerPhrase = phrase.toLowerCase();
-                
-                importanceWords.forEach(kw => {
-                    if (lowerPhrase.includes(kw)) {
-                        score += 5;
-                    }
-                });
-                
-                if (idx === 0) score += 10;
-                if (idx === phrases.length - 1) score += 10;
-                
-                score += Math.min(phrase.length / 10, 5);
-                
+                const low = phrase.toLowerCase();
+                importanceWords.forEach(k => { if (low.includes(k)) score += 5; });
+                if (idx === 0 || idx === phrases.length - 1) score += 8;
+                score += Math.min(phrase.length / 20, 4);
                 return { phrase, score, idx };
             });
 
             const topCount = Math.max(2, Math.ceil(phrases.length * 0.4));
-            const topPhrases = phraseScores
+            return scored
                 .sort((a, b) => b.score - a.score)
                 .slice(0, topCount)
                 .sort((a, b) => a.idx - b.idx)
-                .map(item => item.phrase);
-
-            const summary = topPhrases.join(' → ');
-
-            return summary.length > 0 ? summary : 'Резюме недоступно. Пожалуйста, повторите.';
+                .map(x => x.phrase)
+                .join(' → ');
         }
 
         function resetRecording() {
-            // Останавливаем запись если она идёт
             if (recognition && isRecording) {
                 shouldContinueRecording = false;
-                try {
-                    recognition.abort();
-                } catch (e) {
-                    // ignore
-                }
+                try { recognition.abort(); } catch {}
             }
-            
-            // Очищаем всё
-            transcript = '';
+
+            finalChunks = [];
             interimTranscript = '';
-            shouldContinueRecording = false;
             isRecording = false;
-            
-            // Обновляем UI
-            document.getElementById('startBtn').disabled = false;
+            shouldContinueRecording = false;
+
+            document.getElementById('startBtn').disabled = !hasPermission;
             document.getElementById('stopBtn').disabled = true;
             document.getElementById('resetBtn').disabled = true;
             document.getElementById('summaryBtn').disabled = true;
             document.getElementById('summaryBox').classList.remove('active');
-            
+            document.getElementById('summaryText').textContent = '';
+
             updateTranscriptDisplay();
-            showStatus('🔄 Начат новый диалог. Нажмите "Начать запись"', 'success');
+            showStatus('🔄 Новый диалог. Нажмите "Начать запись".', 'success');
         }
 
         function copySummary() {
-            const summaryText = document.getElementById('summaryText').textContent;
-            if (!summaryText.trim()) {
+            const text = document.getElementById('summaryText').textContent.trim();
+            if (!text) {
                 showStatus('Нет текста для копирования', 'error');
                 return;
             }
-            
-            navigator.clipboard.writeText(summaryText)
-                .then(() => {
-                    showStatus('✓ Скопировано в буфер обмена!', 'success');
-                })
-                .catch(err => {
-                    showStatus('✗ Ошибка копирования', 'error');
-                    console.log('Copy error:', err);
-                });
+            navigator.clipboard.writeText(text).then(() => {
+                showStatus('✓ Скопировано в буфер обмена', 'success');
+            }).catch(() => {
+                showStatus('Не удалось скопировать текст', 'error');
+            });
         }
 
         function showStatus(message, type) {
-            const statusEl = document.getElementById('status');
-            statusEl.innerHTML = message;
-            statusEl.className = `status active ${type}`;
-            
+            const el = document.getElementById('status');
+            el.innerHTML = message;
+            el.className = `status active ${type}`;
             if (type === 'success' || type === 'error') {
-                setTimeout(() => {
-                    statusEl.classList.remove('active');
-                }, 4000);
+                setTimeout(() => { el.classList.remove('active'); }, 4000);
             }
         }
 
         function checkBrowserSupport() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            
             if (!SpeechRecognition) {
                 showStatus('Ваш браузер не поддерживает Web Speech API. Используйте Chrome, Edge или Safari.', 'error');
                 document.getElementById('startBtn').disabled = true;
-                return false;
+                return;
             }
 
             if (navigator.permissions && navigator.permissions.query) {
                 navigator.permissions.query({ name: 'microphone' })
-                    .then(permissionStatus => {
-                        if (permissionStatus.state === 'granted') {
+                    .then(status => {
+                        if (status.state === 'granted') {
                             hasPermission = true;
                             document.getElementById('permissionRequest').classList.remove('active');
                             initSpeechRecognition();
-                        } else if (permissionStatus.state === 'prompt') {
-                            document.getElementById('permissionRequest').classList.add('active');
                         } else {
                             document.getElementById('permissionRequest').classList.add('active');
                         }
@@ -707,8 +557,6 @@
             } else {
                 document.getElementById('permissionRequest').classList.add('active');
             }
-
-            return true;
         }
 
         if ('serviceWorker' in navigator) {
@@ -716,15 +564,12 @@
                 .catch(err => console.log('SW registration failed:', err));
         }
 
-        window.addEventListener('load', () => {
-            checkBrowserSupport();
-        });
+        window.addEventListener('load', checkBrowserSupport);
 
         window.addEventListener('beforeunload', (e) => {
             if (isRecording) {
                 e.preventDefault();
                 e.returnValue = '';
-                return '';
             }
         });
     </script>
