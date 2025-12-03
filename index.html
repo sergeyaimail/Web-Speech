@@ -372,6 +372,8 @@
         let hasPermission = false;
         let interimTranscript = '';
         let shouldContinueRecording = false;
+        let permissionDenied = false;
+        let lastTranscriptLength = 0;
 
         function initSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -405,11 +407,12 @@
                     const transcriptSegment = event.results[i][0].transcript;
 
                     if (event.results[i].isFinal && transcriptSegment.trim() !== '') {
-                        // ✅ ИСПРАВЛЕНИЕ: Добавляем только русский текст (не переводим)
+                        // ✅ ИСПРАВЛЕНИЕ #2: Проверяем, что это действительно новый текст
                         const trimmedSegment = transcriptSegment.trim() + ' ';
-                        // Проверяем, что это не дубликат
+                        // Не добавляем, если текст уже есть в конце (дубликат)
                         if (!transcript.endsWith(trimmedSegment)) {
                             transcript += trimmedSegment;
+                            lastTranscriptLength = transcript.length;
                         }
                     } else {
                         interimTranscript += transcriptSegment;
@@ -435,10 +438,11 @@
 
                 // Если пользователь НЕ нажимал "Остановить", автоматически перезапускаем
                 if (shouldContinueRecording) {
-                    console.log('Auto-restarting after silence...');
+                    console.log('Auto-restarting after silence... Current length:', lastTranscriptLength);
                     try {
                         recognition.lang = 'ru-RU';
                         recognition.language = 'ru-RU';
+                        recognition.maxAlternatives = 1;
                         recognition.start();
                     } catch (e) {
                         console.log('Restart failed:', e);
@@ -458,7 +462,7 @@
         }
 
         function requestMicrophonePermission() {
-            // НЕ запрашиваем повторно если уже есть доступ
+            // ✅ ИСПРАВЛЕНИЕ #1: НЕ запрашиваем если уже есть доступ или юзер отказал
             if (hasPermission) {
                 document.getElementById('permissionRequest').classList.remove('active');
                 if (!recognition) {
@@ -467,10 +471,17 @@
                 return;
             }
 
+            if (permissionDenied) {
+                showStatus('✗ Доступ ранее отклонён. Зайдите: Chrome → Настройки → Приложения → Разрешения → Микрофон → Разрешить', 'error');
+                document.getElementById('permissionRequest').classList.add('active');
+                return;
+            }
+
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
                     stream.getTracks().forEach(track => track.stop());
                     hasPermission = true;
+                    permissionDenied = false;
                     document.getElementById('permissionRequest').classList.remove('active');
                     if (!recognition) {
                         initSpeechRecognition();
@@ -479,7 +490,8 @@
                     showStatus('✓ Доступ к микрофону получен.', 'success');
                 })
                 .catch(error => {
-                    showStatus('✗ Доступ к микрофону отклонён. Проверьте настройки браузера.', 'error');
+                    permissionDenied = true;
+                    showStatus('✗ Доступ отклонён. Зайдите в настройки Chrome и разрешите микрофон для этого сайта.', 'error');
                     document.getElementById('permissionRequest').classList.add('active');
                 });
         }
@@ -496,6 +508,7 @@
 
             transcript = '';
             interimTranscript = '';
+            lastTranscriptLength = 0;
             shouldContinueRecording = true;
             updateTranscriptDisplay();
             document.getElementById('summaryBox').classList.remove('active');
@@ -504,6 +517,7 @@
                 // Явно устанавливаем русский язык ПЕРЕД стартом
                 recognition.lang = 'ru-RU';
                 recognition.language = 'ru-RU';
+                recognition.maxAlternatives = 1;
                 recognition.start();
             } catch (e) {
                 console.log('Already recording or start error:', e);
