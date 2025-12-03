@@ -6,8 +6,7 @@
     <meta name="theme-color" content="#208091">
     <meta name="description" content="Приложение для записи встреч с распознаванием речи и автоматическим резюме">
     <title>Запись и Анализ Встреч</title>
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23208091' width='192' height='192'/><text x='50%25' y='50%25' font-size='96' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'>♪</text></svg>">
+    <link rel="manifest" href="data:application/json,{%22name%22:%22Meeting%20Recorder%22,%22short_name%22:%22Recorder%22,%22start_url%22:%22/%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23208091%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%23208091' width='192' height='192'/%3E%3Ctext x='50%25' y='50%25' font-size='96' font-weight='bold' fill='white' text-anchor='middle' dy='.3em'%3E♪%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
     <style>
         :root {
             --color-bg-1: rgba(29, 78, 216, 0.15);
@@ -193,6 +192,28 @@
             font-style: italic;
         }
 
+        .speaker-turn {
+            margin-bottom: var(--space-12);
+            padding-bottom: var(--space-12);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .speaker-turn:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .speaker-label {
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-4);
+        }
+
+        .speaker-text {
+            color: var(--color-text);
+        }
+
         .summary-box {
             background: var(--color-bg-1);
             border: 1px solid var(--color-border);
@@ -292,13 +313,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎙️ [translate:Запись Встреч]</h1>
+        <h1>🎙️ Запись Встреч</h1>
 
         <div class="permission-request" id="permissionRequest">
-            <p><strong>[translate:Требуется доступ к микрофону]</strong></p>
-            <p>[translate:Приложение нуждается в разрешении на доступ к микрофону вашего устройства для записи встреч.]</p>
+            <p><strong>Требуется доступ к микрофону</strong></p>
+            <p>Приложение нуждается в разрешении на доступ к микрофону вашего устройства для записи встреч.</p>
             <button class="btn btn-request-permission" onclick="requestMicrophonePermission()">
-                ✓ [translate:Разрешить доступ]
+                ✓ Разрешить доступ
             </button>
         </div>
 
@@ -307,29 +328,29 @@
         <div class="card">
             <div class="controls">
                 <button class="btn btn-primary" id="startBtn" onclick="startRecording()">
-                    🔴 [translate:Начать запись]
+                    🔴 Начать запись
                 </button>
                 <button class="btn btn-secondary" id="stopBtn" onclick="stopRecording()" disabled>
-                    ⏹️ [translate:Остановить]
+                    ⏹️ Остановить
                 </button>
                 <button class="btn btn-success" id="summaryBtn" onclick="generateSummary()" disabled>
-                    📋 [translate:Итоги встречи]
+                    📋 Итоги встречи
                 </button>
             </div>
             <div class="info-text">
-                [translate:Браузер автоматически распознает вашу речь]
+                Браузер автоматически распознает вашу речь
             </div>
         </div>
 
         <div class="card">
-            <label class="label">[translate:Транскрипт:]</label>
+            <label class="label">Транскрипт:</label>
             <div class="transcript-box" id="transcript">
-                <div class="transcript-empty">[translate:Нажмите "Начать запись" для начала распознавания речи]</div>
+                <div class="transcript-empty">Нажмите "Начать запись" для начала распознавания речи</div>
             </div>
         </div>
 
         <div class="card summary-box" id="summaryBox">
-            <div class="summary-title">📌 [translate:Резюме встречи:]</div>
+            <div class="summary-title">📌 Резюме встречи:</div>
             <div class="summary-text" id="summaryText"></div>
         </div>
     </div>
@@ -341,6 +362,7 @@
         let hasPermission = false;
         let interimTranscript = '';
 
+        // Инициализация Web Speech API
         function initSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             
@@ -370,7 +392,12 @@
                     const transcriptSegment = event.results[i][0].transcript;
 
                     if (event.results[i].isFinal) {
-                        transcript += transcriptSegment + ' ';
+                        // ✅ ИСПРАВЛЕНИЕ 1: Добавляем ТОЛЬКО если это новый текст (не дублируем)
+                        if (transcriptSegment && transcriptSegment.trim() !== '') {
+                            if (!transcript.includes(transcriptSegment.trim())) {
+                                transcript += transcriptSegment + ' ';
+                            }
+                        }
                     } else {
                         interimTranscript += transcriptSegment;
                     }
@@ -405,6 +432,7 @@
         function requestMicrophonePermission() {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
+                    // Остановить поток
                     stream.getTracks().forEach(track => track.stop());
                     hasPermission = true;
                     document.getElementById('permissionRequest').classList.remove('active');
@@ -434,7 +462,7 @@
             try {
                 recognition.start();
             } catch (e) {
-                console.log('Уже запущена');
+                // Уже запущена
             }
         }
 
@@ -464,6 +492,7 @@
             showStatus('⏳ Анализ текста...', 'processing');
             document.getElementById('summaryBtn').disabled = true;
 
+            // Симуляция обработки
             setTimeout(() => {
                 const summary = extractSummary(transcript);
                 document.getElementById('summaryText').textContent = summary;
@@ -474,46 +503,71 @@
         }
 
         function extractSummary(text) {
-            const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+            // ✅ ИСПРАВЛЕНИЕ 2: Лучше разбиваем текст на "фразы" (по паузам, запятым, "и")
+            // Речь часто идёт без точек, поэтому ищем логические паузы
             
-            if (sentences.length === 0) return 'Не удалось создать резюме из текста.';
+            let phrases = text
+                .split(/[.!?,;а\s]и\s/) // Разбиваем по "и" (частая пауза в речи)
+                .concat(text.split(/[.!?,;]/)) // И по пунктуации
+                .map(p => p.trim())
+                .filter(p => p.length > 10); // Только фразы > 10 символов
 
+            // Если фраз мало, просто возвращаем исходный текст
+            if (phrases.length < 2) {
+                return text;
+            }
+
+            // Удаляем дубликаты
+            phrases = [...new Set(phrases)];
+
+            // ✅ ИСПРАВЛЕНИЕ 3: Расширенный список ключевых слов
             const importanceWords = [
-                'решили', 'обсудили', 'согласились', 'договорились', 'план', 'задача', 
-                'необходимо', 'важно', 'срок', 'дедлайн', 'ответственный', 'заключение', 'итог',
-                'главное', 'основное', 'результат', 'вывод', 'предложили', 'одобрили', 'утвердили'
+                'решили', 'обсудили', 'согласились', 'договорились', 'договор',
+                'план', 'задача', 'задачи', 'необходимо', 'нужно',
+                'важно', 'срок', 'дедлайн', 'ответственный', 'ответственность',
+                'заключение', 'итог', 'вывод', 'результат',
+                'главное', 'основное', 'предложили', 'предложение',
+                'одобрили', 'утвердили', 'утверждение',
+                'ключевой', 'критично', 'критический', 'срочно',
+                'обязательно', 'обязательно', 'внимание', 'следующий'
             ];
 
+            // Подсчёт важности каждой фразы
             let scores = {};
-            sentences.forEach((sentence, idx) => {
+            phrases.forEach((phrase, idx) => {
                 let score = 0;
-                const words = sentence.toLowerCase().split(/\s+/);
+                const words = phrase.toLowerCase().split(/\s+/);
                 
+                // Подсчитываем ключевые слова
                 words.forEach(word => {
-                    if (importanceWords.includes(word)) {
-                        score += 2;
+                    if (importanceWords.some(kw => word.includes(kw))) {
+                        score += 3;
                     }
                 });
                 
-                if (idx === 0 || idx === sentences.length - 1) score += 1;
+                // Первые и последние фразы важнее
+                if (idx === 0 || idx === phrases.length - 1) score += 2;
+                
+                // Длинные фразы важнее
+                if (phrase.length > 50) score += 1;
                 
                 scores[idx] = score;
             });
 
-            const summaryLength = Math.max(1, Math.ceil(sentences.length * 0.35));
+            // Выбираем 30-40% самых важных
+            const summaryLength = Math.max(2, Math.ceil(phrases.length * 0.35));
             const topIndices = Object.entries(scores)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, summaryLength)
                 .map(([idx]) => parseInt(idx))
                 .sort((a, b) => a - b);
 
+            // Собираем резюме в правильном порядке
             const summary = topIndices
-                .map(idx => sentences[idx].trim())
-                .join(' ')
-                .replace(/\s+/g, ' ')
-                .trim();
+                .map(idx => phrases[idx])
+                .join(' → '); // Стрелочки показывают логическую последовательность
 
-            return summary || 'Не удалось создать резюме из текста.';
+            return summary || 'Не удалось создать резюме. Говорите более полными фразами.';
         }
 
         function showStatus(message, type) {
@@ -528,6 +582,7 @@
             }
         }
 
+        // Проверка поддержки браузером
         function checkBrowserSupport() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             
@@ -537,6 +592,7 @@
                 return false;
             }
 
+            // Попросить разрешение на доступ к микрофону
             if (navigator.permissions && navigator.permissions.query) {
                 navigator.permissions.query({ name: 'microphone' })
                     .then(permissionStatus => {
@@ -551,21 +607,25 @@
                         }
                     });
             } else {
+                // Для браузеров, которые не поддерживают Permissions API
                 document.getElementById('permissionRequest').classList.add('active');
             }
 
             return true;
         }
 
+        // Регистрация Service Worker для PWA
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
+            navigator.serviceWorker.register('data:application/javascript,self.addEventListener("install",e=>self.skipWaiting());self.addEventListener("activate",e=>e.waitUntil(clients.claim()));')
                 .catch(err => console.log('SW registration failed:', err));
         }
 
+        // Инициализация при загрузке страницы
         window.addEventListener('load', () => {
             checkBrowserSupport();
         });
 
+        // Обработчик для предотвращения закрытия при активной записи
         window.addEventListener('beforeunload', (e) => {
             if (isRecording) {
                 e.preventDefault();
