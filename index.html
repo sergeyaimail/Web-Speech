@@ -337,6 +337,10 @@
                     <div class="btn-icon">📋</div>
                     <div class="btn-text">Итоги встречи</div>
                 </button>
+                <button class="btn btn-secondary" id="resetBtn" onclick="resetRecording()">
+                    <div class="btn-icon">🔄</div>
+                    <div class="btn-text">Новый диалог</div>
+                </button>
             </div>
             <div class="info-text">
                 Браузер автоматически распознает вашу речь
@@ -351,8 +355,13 @@
         </div>
 
         <div class="card summary-box" id="summaryBox">
-            <div class="summary-title">📌 Резюме встречи:</div>
-            <div class="summary-text" id="summaryText"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-12);">
+                <div class="summary-title" style="margin: 0;">📌 Резюме встречи:</div>
+                <button class="btn btn-secondary" id="copyBtn" onclick="copySummary()" style="width: auto; height: auto; padding: var(--space-8) var(--space-12); font-size: 12px;">
+                    📋 Копировать
+                </button>
+            </div>
+            <div class="summary-text" id="summaryText" contenteditable="true" style="outline: 1px dashed var(--color-border); padding: var(--space-12); border-radius: var(--radius-base); min-height: 100px;"></div>
         </div>
     </div>
 
@@ -424,11 +433,12 @@
                 isRecording = false;
                 interimTranscript = '';
 
-                // ✅ ИСПРАВЛЕНИЕ #2: Если пользователь нажал "Остановить", не перезапускаем
+                // Если пользователь НЕ нажимал "Остановить", автоматически перезапускаем
                 if (shouldContinueRecording) {
-                    // Chrome останавливает recognition через 30 сек молчания, автоматически рестартуем
-                    console.log('Auto-restarting recognition after silence...');
+                    console.log('Auto-restarting after silence...');
                     try {
+                        recognition.lang = 'ru-RU';
+                        recognition.language = 'ru-RU';
                         recognition.start();
                     } catch (e) {
                         console.log('Restart failed:', e);
@@ -437,37 +447,51 @@
                     // Пользователь нажал "Остановить"
                     document.getElementById('startBtn').disabled = false;
                     document.getElementById('stopBtn').disabled = true;
+                    document.getElementById('resetBtn').disabled = false;
                     document.getElementById('summaryBtn').disabled = transcript.trim() === '';
                     
                     if (transcript.trim() !== '') {
-                        showStatus('Запись завершена. Нажмите "Итоги встречи" для анализа.', 'success');
+                        showStatus('✓ Запись завершена. Нажмите "Итоги встречи" для анализа.', 'success');
                     }
                 }
             };
         }
 
         function requestMicrophonePermission() {
+            // НЕ запрашиваем повторно если уже есть доступ
+            if (hasPermission) {
+                document.getElementById('permissionRequest').classList.remove('active');
+                if (!recognition) {
+                    initSpeechRecognition();
+                }
+                return;
+            }
+
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
                     stream.getTracks().forEach(track => track.stop());
                     hasPermission = true;
                     document.getElementById('permissionRequest').classList.remove('active');
-                    initSpeechRecognition();
+                    if (!recognition) {
+                        initSpeechRecognition();
+                    }
                     document.getElementById('startBtn').disabled = false;
+                    showStatus('✓ Доступ к микрофону получен.', 'success');
                 })
                 .catch(error => {
-                    showStatus('Доступ к микрофону отклонён. Проверьте настройки браузера.', 'error');
+                    showStatus('✗ Доступ к микрофону отклонён. Проверьте настройки браузера.', 'error');
+                    document.getElementById('permissionRequest').classList.add('active');
                 });
         }
 
         function startRecording() {
-            if (!recognition) {
-                initSpeechRecognition();
-            }
-            
             if (!hasPermission) {
                 requestMicrophonePermission();
                 return;
+            }
+
+            if (!recognition) {
+                initSpeechRecognition();
             }
 
             transcript = '';
@@ -476,28 +500,34 @@
             updateTranscriptDisplay();
             document.getElementById('summaryBox').classList.remove('active');
             
-            // ✅ ИСПРАВЛЕНИЕ: Пересоздаём recognition с правильными параметрами русского языка
             try {
-                recognition.stop();
-            } catch (e) {
-                // ignore
-            }
-            
-            // Пересоздаём recognition заново для новой сессии
-            recognition = null;
-            initSpeechRecognition();
-            
-            try {
+                // Явно устанавливаем русский язык ПЕРЕД стартом
+                recognition.lang = 'ru-RU';
+                recognition.language = 'ru-RU';
                 recognition.start();
             } catch (e) {
-                console.log('Start error:', e);
+                console.log('Already recording or start error:', e);
             }
         }
 
         function stopRecording() {
-            if (recognition && isRecording) {
+            if (recognition) {
                 shouldContinueRecording = false;
-                recognition.stop();
+                isRecording = false;
+                try {
+                    recognition.abort(); // abort() прерывает сразу, не finish current
+                } catch (e) {
+                    console.log('Abort error:', e);
+                }
+                // Обновляем UI
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('resetBtn').disabled = false;
+                document.getElementById('summaryBtn').disabled = transcript.trim() === '';
+                
+                if (transcript.trim() !== '') {
+                    showStatus('✓ Запись остановлена.', 'success');
+                }
             }
         }
 
@@ -579,6 +609,51 @@
             const summary = topPhrases.join(' → ');
 
             return summary.length > 0 ? summary : 'Резюме недоступно. Пожалуйста, повторите.';
+        }
+
+        function resetRecording() {
+            // Останавливаем запись если она идёт
+            if (recognition && isRecording) {
+                shouldContinueRecording = false;
+                try {
+                    recognition.abort();
+                } catch (e) {
+                    // ignore
+                }
+            }
+            
+            // Очищаем всё
+            transcript = '';
+            interimTranscript = '';
+            shouldContinueRecording = false;
+            isRecording = false;
+            
+            // Обновляем UI
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('resetBtn').disabled = true;
+            document.getElementById('summaryBtn').disabled = true;
+            document.getElementById('summaryBox').classList.remove('active');
+            
+            updateTranscriptDisplay();
+            showStatus('🔄 Начат новый диалог. Нажмите "Начать запись"', 'success');
+        }
+
+        function copySummary() {
+            const summaryText = document.getElementById('summaryText').textContent;
+            if (!summaryText.trim()) {
+                showStatus('Нет текста для копирования', 'error');
+                return;
+            }
+            
+            navigator.clipboard.writeText(summaryText)
+                .then(() => {
+                    showStatus('✓ Скопировано в буфер обмена!', 'success');
+                })
+                .catch(err => {
+                    showStatus('✗ Ошибка копирования', 'error');
+                    console.log('Copy error:', err);
+                });
         }
 
         function showStatus(message, type) {
