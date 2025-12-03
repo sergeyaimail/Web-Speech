@@ -426,6 +426,9 @@
                 if (transcript.trim() !== '') {
                     showStatus('Запись завершена. Нажмите "Итоги встречи" для анализа.', 'success');
                 }
+                
+                // ✅ ИСПРАВЛЕНИЕ #3: НЕ перезапускаем признание автоматически (иначе停止 через 30 сек)
+                // Пользователь сам нажмёт "Начать запись" для новой сессии
             };
         }
 
@@ -459,10 +462,14 @@
             updateTranscriptDisplay();
             document.getElementById('summaryBox').classList.remove('active');
             
+            // ✅ ИСПРАВЛЕНИЕ #3: Если система сама остановила recognition, рестартуем ПРАВИЛЬНО
             try {
-                recognition.start();
+                recognition.stop(); // Останавливаем старую сессию
+                setTimeout(() => {
+                    recognition.start(); // Затем запускаем новую (с паузой 100ms)
+                }, 100);
             } catch (e) {
-                // Уже запущена
+                console.log('Start error:', e);
             }
         }
 
@@ -503,71 +510,62 @@
         }
 
         function extractSummary(text) {
-            // ✅ ИСПРАВЛЕНИЕ 2: Лучше разбиваем текст на "фразы" (по паузам, запятым, "и")
-            // Речь часто идёт без точек, поэтому ищем логические паузы
-            
+            // ✅ ИСПРАВЛЕНИЕ #2: Разбиваем текст на РЕАЛЬНЫЕ фразы (по запятым, точкам, паузам)
             let phrases = text
-                .split(/[.!?,;а\s]и\s/) // Разбиваем по "и" (частая пауза в речи)
-                .concat(text.split(/[.!?,;]/)) // И по пунктуации
+                .split(/[.,!?;:—–-]\s+/) // Разбиваем по пунктуации со строгим разделением
                 .map(p => p.trim())
-                .filter(p => p.length > 10); // Только фразы > 10 символов
+                .filter(p => p.length > 5); // Только значащие фразы
 
-            // Если фраз мало, просто возвращаем исходный текст
-            if (phrases.length < 2) {
-                return text;
-            }
+            if (phrases.length === 0) return 'Недостаточно текста для резюме.';
+            if (phrases.length === 1) return phrases[0];
 
-            // Удаляем дубликаты
-            phrases = [...new Set(phrases)];
-
-            // ✅ ИСПРАВЛЕНИЕ 3: Расширенный список ключевых слов
+            // Ключевые слова для выделения важного
             const importanceWords = [
-                'решили', 'обсудили', 'согласились', 'договорились', 'договор',
-                'план', 'задача', 'задачи', 'необходимо', 'нужно',
-                'важно', 'срок', 'дедлайн', 'ответственный', 'ответственность',
-                'заключение', 'итог', 'вывод', 'результат',
-                'главное', 'основное', 'предложили', 'предложение',
-                'одобрили', 'утвердили', 'утверждение',
-                'ключевой', 'критично', 'критический', 'срочно',
-                'обязательно', 'обязательно', 'внимание', 'следующий'
+                'решил', 'обсуди', 'согласи', 'договори', 'договор',
+                'план', 'задач', 'нужн', 'необходим',
+                'важн', 'срок', 'дедлайн', 'ответствен',
+                'заключ', 'итог', 'вывод', 'результат',
+                'главн', 'основн', 'предложи',
+                'одобри', 'утверди',
+                'ключ', 'критич', 'срочн',
+                'обязатель', 'внимани', 'следующ',
+                'выполн', 'отвечает', 'ответить', 'новое', 'изменени'
             ];
 
-            // Подсчёт важности каждой фразы
-            let scores = {};
-            phrases.forEach((phrase, idx) => {
+            // Подсчёт значимости каждой фразы
+            const phraseScores = phrases.map((phrase, idx) => {
                 let score = 0;
-                const words = phrase.toLowerCase().split(/\s+/);
+                const lowerPhrase = phrase.toLowerCase();
                 
-                // Подсчитываем ключевые слова
-                words.forEach(word => {
-                    if (importanceWords.some(kw => word.includes(kw))) {
-                        score += 3;
+                // Считаем вхождения ключевых слов (используем partial match)
+                importanceWords.forEach(kw => {
+                    if (lowerPhrase.includes(kw)) {
+                        score += 5;
                     }
                 });
                 
-                // Первые и последние фразы важнее
-                if (idx === 0 || idx === phrases.length - 1) score += 2;
+                // Бонус за позицию (первая и последняя важнее)
+                if (idx === 0) score += 10;
+                if (idx === phrases.length - 1) score += 10;
                 
-                // Длинные фразы важнее
-                if (phrase.length > 50) score += 1;
+                // Бонус за длину
+                score += Math.min(phrase.length / 10, 5);
                 
-                scores[idx] = score;
+                return { phrase, score, idx };
             });
 
-            // Выбираем 30-40% самых важных
-            const summaryLength = Math.max(2, Math.ceil(phrases.length * 0.35));
-            const topIndices = Object.entries(scores)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, summaryLength)
-                .map(([idx]) => parseInt(idx))
-                .sort((a, b) => a - b);
+            // Сортируем по значимости и берём топ (30-50%)
+            const topCount = Math.max(2, Math.ceil(phrases.length * 0.4));
+            const topPhrases = phraseScores
+                .sort((a, b) => b.score - a.score)
+                .slice(0, topCount)
+                .sort((a, b) => a.idx - b.idx) // Возвращаем в исходном порядке
+                .map(item => item.phrase);
 
-            // Собираем резюме в правильном порядке
-            const summary = topIndices
-                .map(idx => phrases[idx])
-                .join(' → '); // Стрелочки показывают логическую последовательность
+            // Формируем резюме с разделителями
+            const summary = topPhrases.join(' → ');
 
-            return summary || 'Не удалось создать резюме. Говорите более полными фразами.';
+            return summary.length > 0 ? summary : 'Резюме недоступно. Пожалуйста, повторите.';
         }
 
         function showStatus(message, type) {
