@@ -376,6 +376,7 @@
             recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
+            recognition.lang = 'ru-RU';
             recognition.language = 'ru-RU';
             recognition.maxAlternatives = 1;
 
@@ -395,8 +396,9 @@
                     const transcriptSegment = event.results[i][0].transcript;
 
                     if (event.results[i].isFinal && transcriptSegment.trim() !== '') {
-                        // ✅ ИСПРАВЛЕНИЕ #1: Проверяем, что текст НЕ заканчивается тем же (не дублируем)
+                        // ✅ ИСПРАВЛЕНИЕ: Добавляем только русский текст (не переводим)
                         const trimmedSegment = transcriptSegment.trim() + ' ';
+                        // Проверяем, что это не дубликат
                         if (!transcript.endsWith(trimmedSegment)) {
                             transcript += trimmedSegment;
                         }
@@ -474,10 +476,21 @@
             updateTranscriptDisplay();
             document.getElementById('summaryBox').classList.remove('active');
             
+            // ✅ ИСПРАВЛЕНИЕ: Пересоздаём recognition с правильными параметрами русского языка
+            try {
+                recognition.stop();
+            } catch (e) {
+                // ignore
+            }
+            
+            // Пересоздаём recognition заново для новой сессии
+            recognition = null;
+            initSpeechRecognition();
+            
             try {
                 recognition.start();
             } catch (e) {
-                console.log('Already recording:', e);
+                console.log('Start error:', e);
             }
         }
 
