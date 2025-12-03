@@ -34,7 +34,9 @@
             }
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -45,7 +47,10 @@
             line-height: 1.6;
         }
 
-        .container { max-width: 600px; margin: 0 auto; }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
         h1 {
             text-align: center;
@@ -88,24 +93,55 @@
             height: 100px;
         }
 
-        .btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
 
-        .btn-primary { background: var(--color-primary); color: white; }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
         .btn-primary:hover:not(:disabled) {
             background: var(--color-primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(32, 128, 145, 0.3);
         }
 
-        .btn-success { background: var(--color-success); color: white; }
-        .btn-success:hover:not(:disabled) { background: #23a142; transform: translateY(-2px); }
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
 
-        .btn-secondary { background: #e0e0e0; color: var(--color-text); }
-        .btn-secondary:hover:not(:disabled) { background: #d0d0d0; }
+        .btn-success:hover:not(:disabled) {
+            background: #23a142;
+            transform: translateY(-2px);
+        }
 
-        .btn-text { font-size: 12px; text-align: center; line-height: 1.2; }
-        .btn-icon { font-size: 32px; }
+        .btn-secondary {
+            background: #e0e0e0;
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #d0d0d0;
+        }
+
+        .btn-text {
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .btn-icon {
+            font-size: 32px;
+        }
 
         .status {
             text-align: center;
@@ -116,12 +152,31 @@
             display: none;
         }
 
-        .status.active { display: block; }
-        .status.recording { background: rgba(255, 84, 89, 0.15); color: var(--color-error); }
-        .status.processing { background: rgba(32, 128, 145, 0.15); color: var(--color-primary); }
-        .status.success { background: rgba(43, 184, 78, 0.15); color: var(--color-success); }
+        .status.active {
+            display: block;
+        }
 
-        .label { display: block; margin-bottom: var(--space-8); font-weight: 600; color: var(--color-text); }
+        .status.recording {
+            background: rgba(255, 84, 89, 0.15);
+            color: var(--color-error);
+        }
+
+        .status.processing {
+            background: rgba(32, 128, 145, 0.15);
+            color: var(--color-primary);
+        }
+
+        .status.success {
+            background: rgba(43, 184, 78, 0.15);
+            color: var(--color-success);
+        }
+
+        .label {
+            display: block;
+            margin-bottom: var(--space-8);
+            font-weight: 600;
+            color: var(--color-text);
+        }
 
         .transcript-box {
             background: white;
@@ -138,10 +193,16 @@
         }
 
         @media (prefers-color-scheme: dark) {
-            .transcript-box { background: #1a1a1a; border-color: var(--color-border); }
+            .transcript-box {
+                background: #1a1a1a;
+                border-color: var(--color-border);
+            }
         }
 
-        .transcript-empty { color: var(--color-text-secondary); font-style: italic; }
+        .transcript-empty {
+            color: var(--color-text-secondary);
+            font-style: italic;
+        }
 
         .summary-box {
             background: var(--color-bg-1);
@@ -152,7 +213,9 @@
             display: none;
         }
 
-        .summary-box.active { display: block; }
+        .summary-box.active {
+            display: block;
+        }
 
         .summary-title {
             font-weight: 700;
@@ -178,8 +241,14 @@
             margin-bottom: var(--space-16);
         }
 
-        .permission-request.active { display: block; }
-        .permission-request p { margin: 0 0 var(--space-12) 0; color: var(--color-text); }
+        .permission-request.active {
+            display: block;
+        }
+
+        .permission-request p {
+            margin: 0 0 var(--space-12) 0;
+            color: var(--color-text);
+        }
 
         .btn-request-permission {
             background: var(--color-error);
@@ -190,7 +259,9 @@
             flex-direction: row;
         }
 
-        .btn-request-permission:hover:not(:disabled) { background: #e63d42; }
+        .btn-request-permission:hover:not(:disabled) {
+            background: #e63d42;
+        }
 
         .recording-indicator {
             display: inline-block;
@@ -201,7 +272,10 @@
             animation: pulse 1s infinite;
         }
 
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
 
         .info-text {
             font-size: 12px;
@@ -211,11 +285,27 @@
         }
 
         @media (max-width: 480px) {
-            body { padding: var(--space-12); }
-            h1 { font-size: 24px; }
-            .btn { width: 90px; height: 90px; font-size: 11px; }
-            .btn-icon { font-size: 28px; }
-            .controls { gap: var(--space-12); }
+            body {
+                padding: var(--space-12);
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .btn {
+                width: 90px;
+                height: 90px;
+                font-size: 11px;
+            }
+
+            .btn-icon {
+                font-size: 28px;
+            }
+
+            .controls {
+                gap: var(--space-12);
+            }
         }
     </style>
 </head>
@@ -247,12 +337,14 @@
                     <div class="btn-icon">📋</div>
                     <div class="btn-text">Итоги встречи</div>
                 </button>
-                <button class="btn btn-secondary" id="resetBtn" onclick="resetRecording()" disabled>
+                <button class="btn btn-secondary" id="resetBtn" onclick="resetRecording()">
                     <div class="btn-icon">🔄</div>
                     <div class="btn-text">Новый диалог</div>
                 </button>
             </div>
-            <div class="info-text">Браузер автоматически распознает вашу речь</div>
+            <div class="info-text">
+                Браузер автоматически распознает вашу речь
+            </div>
         </div>
 
         <div class="card">
@@ -276,15 +368,15 @@
     <script>
         let recognition = null;
         let isRecording = false;
-        let hasPermission = false;
-        let permissionDenied = false;
-
         let finalChunks = [];
+        let hasPermission = false;
         let interimTranscript = '';
         let shouldContinueRecording = false;
+        let permissionDenied = false;
 
         function initSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
             if (!SpeechRecognition) {
                 showStatus('Ваш браузер не поддерживает Web Speech API', 'error');
                 document.getElementById('startBtn').disabled = true;
@@ -295,6 +387,7 @@
             recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = 'ru-RU';
+            recognition.language = 'ru-RU';
             recognition.maxAlternatives = 1;
 
             recognition.onstart = () => {
@@ -303,7 +396,6 @@
                 document.getElementById('startBtn').disabled = true;
                 document.getElementById('stopBtn').disabled = false;
                 document.getElementById('summaryBtn').disabled = true;
-                document.getElementById('resetBtn').disabled = true;
                 showStatus('<span class="recording-indicator"></span> Запись в процессе...', 'recording');
             };
 
@@ -311,11 +403,10 @@
                 interimTranscript = '';
 
                 for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const res = event.results[i];
-                    const text = res[0].transcript.trim();
+                    const text = event.results[i][0].transcript.trim();
                     if (!text) continue;
 
-                    if (res.isFinal) {
+                    if (event.results[i].isFinal) {
                         if (!finalChunks.includes(text)) {
                             finalChunks.push(text);
                         }
@@ -332,7 +423,7 @@
                     showStatus('Не обнаружена речь. Проверьте микрофон.', 'error');
                 } else if (event.error === 'network') {
                     showStatus('Ошибка сети. Проверьте интернет-соединение.', 'error');
-                } else if (event.error !== 'aborted') {
+                } else {
                     showStatus(`Ошибка: ${event.error}`, 'error');
                 }
             };
@@ -353,7 +444,7 @@
                     document.getElementById('stopBtn').disabled = true;
                     document.getElementById('resetBtn').disabled = false;
                     document.getElementById('summaryBtn').disabled = finalChunks.length === 0;
-
+                    
                     if (finalChunks.length > 0) {
                         showStatus('✓ Запись завершена. Нажмите "Итоги встречи" для анализа.', 'success');
                     }
@@ -362,31 +453,36 @@
         }
 
         function requestMicrophonePermission() {
+            // ✅ ИСПРАВЛЕНИЕ #1: НЕ запрашиваем если уже есть доступ или юзер отказал
             if (hasPermission) {
                 document.getElementById('permissionRequest').classList.remove('active');
-                if (!recognition) initSpeechRecognition();
+                if (!recognition) {
+                    initSpeechRecognition();
+                }
                 return;
             }
 
             if (permissionDenied) {
-                showStatus('Доступ ранее отклонён. Разрешите микрофон в настройках браузера.', 'error');
+                showStatus('✗ Доступ ранее отклонён. Зайдите: Chrome → Настройки → Приложения → Разрешения → Микрофон → Разрешить', 'error');
                 document.getElementById('permissionRequest').classList.add('active');
                 return;
             }
 
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
-                    stream.getTracks().forEach(t => t.stop());
+                    stream.getTracks().forEach(track => track.stop());
                     hasPermission = true;
                     permissionDenied = false;
                     document.getElementById('permissionRequest').classList.remove('active');
-                    if (!recognition) initSpeechRecognition();
+                    if (!recognition) {
+                        initSpeechRecognition();
+                    }
                     document.getElementById('startBtn').disabled = false;
                     showStatus('✓ Доступ к микрофону получен.', 'success');
                 })
-                .catch(() => {
+                .catch(error => {
                     permissionDenied = true;
-                    showStatus('Доступ к микрофону отклонён. Разрешите его в настройках браузера.', 'error');
+                    showStatus('✗ Доступ отклонён. Зайдите в настройки Chrome и разрешите микрофон для этого сайта.', 'error');
                     document.getElementById('permissionRequest').classList.add('active');
                 });
         }
@@ -396,14 +492,17 @@
                 requestMicrophonePermission();
                 return;
             }
-            if (!recognition) initSpeechRecognition();
+
+            if (!recognition) {
+                initSpeechRecognition();
+            }
 
             finalChunks = [];
             interimTranscript = '';
             shouldContinueRecording = true;
             updateTranscriptDisplay();
             document.getElementById('summaryBox').classList.remove('active');
-
+            
             try {
                 recognition.lang = 'ru-RU';
                 recognition.start();
@@ -514,42 +613,52 @@
         }
 
         function copySummary() {
-            const text = document.getElementById('summaryText').textContent.trim();
-            if (!text) {
+            const summaryText = document.getElementById('summaryText').textContent;
+            if (!summaryText.trim()) {
                 showStatus('Нет текста для копирования', 'error');
                 return;
             }
-            navigator.clipboard.writeText(text).then(() => {
-                showStatus('✓ Скопировано в буфер обмена', 'success');
-            }).catch(() => {
-                showStatus('Не удалось скопировать текст', 'error');
-            });
+            
+            navigator.clipboard.writeText(summaryText)
+                .then(() => {
+                    showStatus('✓ Скопировано в буфер обмена!', 'success');
+                })
+                .catch(err => {
+                    showStatus('✗ Ошибка копирования', 'error');
+                    console.log('Copy error:', err);
+                });
         }
 
         function showStatus(message, type) {
-            const el = document.getElementById('status');
-            el.innerHTML = message;
-            el.className = `status active ${type}`;
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = message;
+            statusEl.className = `status active ${type}`;
+            
             if (type === 'success' || type === 'error') {
-                setTimeout(() => { el.classList.remove('active'); }, 4000);
+                setTimeout(() => {
+                    statusEl.classList.remove('active');
+                }, 4000);
             }
         }
 
         function checkBrowserSupport() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
             if (!SpeechRecognition) {
                 showStatus('Ваш браузер не поддерживает Web Speech API. Используйте Chrome, Edge или Safari.', 'error');
                 document.getElementById('startBtn').disabled = true;
-                return;
+                return false;
             }
 
             if (navigator.permissions && navigator.permissions.query) {
                 navigator.permissions.query({ name: 'microphone' })
-                    .then(status => {
-                        if (status.state === 'granted') {
+                    .then(permissionStatus => {
+                        if (permissionStatus.state === 'granted') {
                             hasPermission = true;
                             document.getElementById('permissionRequest').classList.remove('active');
                             initSpeechRecognition();
+                        } else if (permissionStatus.state === 'prompt') {
+                            document.getElementById('permissionRequest').classList.add('active');
                         } else {
                             document.getElementById('permissionRequest').classList.add('active');
                         }
@@ -557,6 +666,8 @@
             } else {
                 document.getElementById('permissionRequest').classList.add('active');
             }
+
+            return true;
         }
 
         if ('serviceWorker' in navigator) {
@@ -564,12 +675,15 @@
                 .catch(err => console.log('SW registration failed:', err));
         }
 
-        window.addEventListener('load', checkBrowserSupport);
+        window.addEventListener('load', () => {
+            checkBrowserSupport();
+        });
 
         window.addEventListener('beforeunload', (e) => {
             if (isRecording) {
                 e.preventDefault();
                 e.returnValue = '';
+                return '';
             }
         });
     </script>
